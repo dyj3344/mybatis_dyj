@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    <mapper namespace="com.dyj.mybatis.mapper.OrderMapper">
+    <resultMap id="orderdao" type="orders">
+        <id column="id" property="id"></id>
+        <result column="ordertime" property="ordertime"/>
+        <result column="total" property="total"/>
+        <result column="uid" property="uid"/>
+<!--   association:在进行一对一关联查询配置时,使用association标签进行关联
+        property="user" 要封装的属性名
+        javaType="user"要封装实体的类型
+        -->
+        <association property="user" javaType="user">
+            <id property="id" column="uid"/>
+            <result property="username" column="username"/>
+            <result property="birthday" column="birthday"/>
+            <result property="sex" column="sex"/>
+            <result property="address" column="address"/>
+        </association>
+    </resultMap>
+    <select id="findAllWithUser"  resultMap="orderdao">
+        SELECT * FROM orders o LEFT JOIN USER u ON o.`uid`=u.`id`
+    </select>
+</mapper>

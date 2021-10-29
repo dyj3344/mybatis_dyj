@@ -1,73 +1,27 @@
 package com.dyj.mybatis.domain;
 
-import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
+import java.util.Date;
+import java.util.List;
+
+@Data
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
     private Integer id;
     private String username;
     private Date birthday;
     private String sex;
     private String address;
+    private List<Orders> orderList;
 
-    public User() {
-    }
+    private List<Role> roleList;
 
-    public Integer getId() {
-        return id;
-    }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public Date getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
-    }
-
-    public String getSex() {
-        return sex;
-    }
-
-    public void setSex(String sex) {
-        this.sex = sex;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", birthday=" + birthday +
-                ", sex='" + sex + '\'' +
-                ", address='" + address + '\'' +
-                '}';
-    }
-
-    public User(Integer id, String username, Date birthday, String sex, String address) {
-        this.id = id;
-        this.username = username;
-        this.birthday = birthday;
-        this.sex = sex;
-        this.address = address;
-    }
 }

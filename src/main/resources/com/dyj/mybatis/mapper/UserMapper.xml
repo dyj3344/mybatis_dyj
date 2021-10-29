@@ -4,13 +4,18 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
     <mapper namespace="com.dyj.mybatis.mapper.UserMapper">
-    <select id="findUserById" parameterType="int" resultType="user">
-        select * from user where id=#{id}
-    </select>
-
-    <select id="findAllResultMap"  resultType="user">
+<!--    sql片段抽取可将重复的sql语句抽取出来,使用时用<include ref="id"/>就可替代重复语句-->
+    <sql id="selectUser">
         select * from user
-    </select>
+    </sql>
+
+<!--    <select id="findUserById" parameterType="int" resultType="user">-->
+<!--        select * from user where id=#{id}-->
+<!--    </select>-->
+
+<!--    <select id="findAllResultMap"  resultType="user">-->
+<!--        select * from user-->
+<!--    </select>-->
 
 <!--    <select id="findByIdAndUserName" resultType="user" >-->
 <!--        &lt;!&ndash;para &ndash;&gt;-->
@@ -35,4 +40,100 @@
 <!--        </selectKey>-->
 <!--        insert into user(username,birthday,sex,address)values(#{username},#{birthday},#{sex},#{address})-->
 <!--    </insert>-->
+<!--    动态sql之if：多条件查询-->
+<!--    <select id="findUserByIf" parameterType="user" resultType="user">-->
+<!--        select * from user-->
+<!--        &lt;!&ndash; where相当于where 1=1 但如果没有条件的话不会拼接上where关键字&ndash;&gt;-->
+<!--       <where>-->
+<!--&lt;!&ndash; test里面写的是表达式&ndash;&gt;-->
+<!--            <if test="id !=null">-->
+<!--                 and id= #{id}-->
+<!--            </if>-->
+<!--        <if test="username !=null">-->
+<!--            and username= #{username}-->
+<!--        </if>-->
+<!--       </where>-->
+<!--    </select>-->
+
+<!--    <update id="updateIf" parameterType="user">-->
+<!--        update user-->
+<!--        <set>-->
+<!--            <if test="username !=null">username=#{username},</if>-->
+<!--            <if test="birthday !=null">birthday=#{birthday},</if>-->
+<!--            <if test="sex !=null">sex=#{sex},</if>-->
+<!--            <if test="address !=null">address=#{address},</if>-->
+<!--        </set>-->
+<!--        where id =#{id}-->
+<!--    </update>-->
+<!--    -->
+<!--    <select id="findByList" parameterType="list" resultType="user">-->
+<!--        <include refid="selectUser"></include>-->
+<!--        <where>-->
+<!--            &lt;!&ndash; collection:代表要遍历的元素类型,通常写collection或者list-->
+<!--            open代表语句开始部分-->
+<!--            close代表语句结束部分-->
+<!--            item代表遍历结合中的每个元素,生成的变量名-->
+<!--            separator分隔符&ndash;&gt;-->
+<!--            <foreach collection="collection" open="id in (" close=")" item="id" separator=",">-->
+<!--                #{id}-->
+<!--            </foreach>-->
+<!--        </where>-->
+<!--    </select>-->
+
+<!--    <select id="findByArray" parameterType="int" resultType="user">-->
+<!--        <include refid="selectUser"></include>-->
+<!--        <where>-->
+<!--            &lt;!&ndash; collection:代表要遍历的元素类型,通常写collection或者list-->
+<!--            open代表语句开始部分-->
+<!--            close代表语句结束部分-->
+<!--            item代表遍历结合中的每个元素,生成的变量名-->
+<!--            separator分隔符&ndash;&gt;-->
+<!--            <foreach collection="array" open="id in (" close=")" item="id" separator=",">-->
+<!--                #{id}-->
+<!--            </foreach>-->
+<!--        </where>-->
+<!--    </select>-->
+    <resultMap id="userdao" type="user">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="birthday" column="birthday"/>
+        <result property="sex" column="sex"/>
+        <result property="address" column="address"/>
+<!--    collection： 一对多使用  collection关联 -->
+        <collection property="orderList" ofType="orders">
+            <id property="id" column="oid"/>
+            <result property="ordertime" column="ordertime"/>
+            <result property="total" column="total"/>
+            <result property="uid" column="uid"/>
+        </collection>
+    </resultMap>
+    <select id="findAllWithOrder" resultMap="userdao">
+        SELECT *,o.id oid FROM USER u LEFT JOIN orders o ON u.`id` = o.`uid`
+    </select>
+
+    <resultMap id="userRole" type="user">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="birthday" column="birthday"/>
+        <result property="sex" column="sex"/>
+        <result property="address" column="address"/>
+        <!--    collection： 一对多使用  collection关联 -->
+        <collection property="roleList" ofType="role">
+            <id property="id" column="rid"/>
+            <result property="rolename" column="rolename"/>
+            <result property="roleDesc" column="roleDesc"/>
+            <result property="uid" column="uid"/>
+        </collection>
+    </resultMap>
+    <select id="findAllWithRole" resultMap="userRole">
+        SELECT
+            u.*,r.id rid,r.rolename,r.roleDesc
+        FROM
+            USER u
+                LEFT JOIN sys_user_role ur
+                          ON u.`id` = ur.`userid`
+                LEFT JOIN sys_role r
+                          ON ur.`roleid` = r.`id`
+    </select>
+
 </mapper>
