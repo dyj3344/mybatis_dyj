@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+    <mapper namespace="com.dyj.mybatis.mapper.UserMapper">
+    <select id="findUserById" parameterType="int" resultType="user">
+        select * from user where id=#{id}
+    </select>
+
+    <select id="findAllResultMap"  resultType="user">
+        select * from user
+    </select>
+
+<!--    <select id="findByIdAndUserName" resultType="user" >-->
+<!--        &lt;!&ndash;para &ndash;&gt;-->
+<!--        select * from user where id=#{id} and username= #{username}-->
+<!--    </select>-->
+
+<!--    <select id="findByUserName" resultType="user" parameterType="string">-->
+<!--        &lt;!&ndash;para &ndash;&gt;-->
+<!--        select * from user where username like '${value}'-->
+<!--    </select>-->
+
+<!--    <insert id="saveUser" parameterType="user">-->
+<!--        &lt;!&ndash; selectKey:适用范围广,支持所有类型的数据库-->
+<!--            order="AFTER":设置在执行完sql后执行此语句-->
+<!--            order="BEFORE":设置在执行完sql前执行此语句-->
+<!--            keyColumn:指定主键对应的列名-->
+<!--            keyProperty:把返回主键的值，封装到实体中的哪个属性上-->
+
+<!--        &ndash;&gt;-->
+<!--        <selectKey order="AFTER" keyColumn="id" keyProperty="id" resultType="int">-->
+<!--            select LAST_INSERT_ID();-->
+<!--        </selectKey>-->
+<!--        insert into user(username,birthday,sex,address)values(#{username},#{birthday},#{sex},#{address})-->
+<!--    </insert>-->
+</mapper>
